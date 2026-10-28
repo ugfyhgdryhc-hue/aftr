@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09090d">
+<title>AFTR. — Your memories, your world.</title>
+<style>
+:root{--bg:#09090d;--panel:#121219;--panel2:#191923;--text:#f5f3fa;--muted:#a09cad;--line:#292633;--accent:#c5a4ff;--accent2:#f3b5dc;--glow:rgba(197,164,255,.16);--decor:"✦";color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh;transition:background .35s,color .35s}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:radial-gradient(var(--accent) .6px,transparent .6px);background-size:22px 22px;mask-image:linear-gradient(to bottom,black,transparent 75%);z-index:-1}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}.hidden{display:none!important}
+header{position:sticky;top:0;z-index:5;backdrop-filter:blur(18px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--line);padding:14px max(18px,env(safe-area-inset-left));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-weight:850;letter-spacing:-.08em;font-size:25px;text-decoration:none}.logo span{color:var(--accent)}
+.header-actions{display:flex;gap:8px;align-items:center}.small-btn,.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:10px 14px}.btn.primary{background:var(--accent);color:#17111f;border-color:transparent;font-weight:750}.btn:disabled{opacity:.5;cursor:not-allowed}
+main{max-width:1000px;margin:0 auto;padding:30px 18px 80px}.hero{padding:32px 0 26px}.eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:11px;color:var(--accent);font-weight:800}.hero h1{font-size:clamp(42px,10vw,76px);letter-spacing:-.075em;line-height:.98;margin:14px 0}.hero p{max-width:540px;line-height:1.7;color:var(--muted);margin:16px 0 22px}.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.panel{border:1px solid var(--line);background:color-mix(in srgb,var(--panel) 92%,transparent);border-radius:22px;padding:20px;margin:18px 0;box-shadow:0 18px 70px rgba(0,0,0,.08)}
+.panel h2{margin:0 0 14px;font-size:20px;letter-spacing:-.04em}.muted{color:var(--muted)}.tiny{font-size:12px;line-height:1.6;color:var(--muted)}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 6px}input,textarea,select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 14px;outline:none}input:focus,textarea:focus,select:focus{border-color:var(--accent)}textarea{min-height:90px;resize:vertical}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.form-grid .full{grid-column:1/-1}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.status{font-size:13px;color:var(--muted);margin-top:12px;min-height:18px}.status.error{color:#ff8d9b}.status.ok{color:#9ee6bd}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:32px 0 14px}.section-head h2{margin:0;font-size:26px;letter-spacing:-.06em}.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.memory{border:1px solid var(--line);background:var(--panel);border-radius:17px;overflow:hidden;min-width:0}.memory img,.memory video{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--panel2)}.memory .meta{padding:12px}.memory h3{font-size:14px;margin:0 0 5px;overflow-wrap:anywhere}.memory p{font-size:12px;color:var(--muted);margin:0;white-space:pre-wrap;overflow-wrap:anywhere}.memory .tools{display:flex;gap:6px;padding:0 12px 12px}.memory .tools button{font-size:11px;padding:7px 9px}
+.theme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.theme-card{border:1px solid var(--line);border-radius:15px;padding:14px;background:var(--bg);text-align:left;color:var(--text);min-height:84px}.theme-card strong{display:block;margin-bottom:6px}.theme-card span{font-size:12px;color:var(--muted)}.theme-card.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.auth-wrap{max-width:480px;margin:22px auto}.footer{border-top:1px solid var(--line);padding:24px 18px;text-align:center;color:var(--muted);font-size:12px}.badge{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:5px 8px;color:var(--muted)}
+#toast{position:fixed;left:18px;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:20;padding:14px 16px;border:1px solid var(--line);background:var(--panel2);border-radius:14px;box-shadow:0 15px 45px #0005;display:none}
+@media(max-width:650px){main{padding-top:18px}.hero{padding-top:24px}.panel{padding:16px;border-radius:18px}.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.memory .meta{padding:9px}.memory .tools{padding:0 9px 9px;flex-wrap:wrap}.form-grid{grid-template-columns:1fr}.form-grid .full{grid-column:auto}.header-actions .small-btn{padding:9px 10px}.theme-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:370px){.gallery{grid-template-columns:1fr}.gallery .memory img,.gallery .memory video{aspect-ratio:5/4}}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#" aria-label="AFTR ana sayfa">AFTR<span>.</span></a>
+  <div class="header-actions">
+    <span id="userBadge" class="badge hidden"></span>
+    <button id="themeJump" class="small-btn" type="button">✦ Temalar</button>
+    <button id="signOutBtn" class="small-btn hidden" type="button">Çıkış</button>
+  </div>
+</header>
+<main>
+  <section class="hero">
+    <div class="eyebrow">YOUR MEMORIES, YOUR WORLD</div>
+    <h1>Some things<br>deserve to <span style="color:var(--accent)">stay.</span></h1>
+    <p>Fotoğrafların, videoların ve unutmak istemediğin anlar için sana ait küçük bir dünya. Kendi estetiğini seç, anılarını sakla.</p>
+    <div class="hero-actions">
+      <button class="btn primary" id="heroStart" type="button">Dünyama gir ↗</button>
+      <button class="btn" id="heroThemes" type="button">Temaları keşfet</button>
+    </div>
+  </section>
+
+  <section id="configNotice" class="panel">
+    <h2>AFTR. kuruluma hazır</h2>
+    <p class="muted">Bu başlangıç sürümünü kendi hesabınla çalıştırmak için Supabase bağlantını eklemen gerekiyor. Kurulum adımları ZIP içindeki README dosyasında.</p>
+    <p class="tiny">Önemli: Aşağıdaki arayüz demo modunda da açılır; gerçek hesaplar ve güvenli dosya yükleme için Supabase ayarı şart.</p>
+  </section>
+
+  <section id="authSection" class="auth-wrap panel">
+    <h2 id="authTitle">Kendi dünyanı oluştur</h2>
+    <p class="muted" id="authSubtitle">Anıların sana özel kalsın.</p>
+    <div id="signupNameWrap">
+      <label for="displayName">Görünen ad (isteğe bağlı)</label>
+      <input id="displayName" maxlength="40" placeholder="ör. moonchild">
+    </div>
+    <label for="email">E-posta</label>
+    <input id="email" type="email" autocomplete="email" placeholder="sen@ornek.com">
+    <label for="password">Parola</label>
+    <input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="En az 8 karakter">
+    <div class="row" style="margin-top:14px">
+      <button id="authSubmit" class="btn primary" type="button">Hesap oluştur</button>
+      <button id="authToggle" class="btn" type="button">Giriş yap</button>
+    </div>
+    <div id="authStatus" class="status" role="status"></div>
+    <p class="tiny">Dört haneli PIN tek başına güvenli hesap parolası değildir; bu sürümde e-posta ve parola kullanılır. PIN özelliği, güvenli hızlı kilit olarak daha sonra eklenebilir.</p>
+  </section>
+
+  <section id="appSection" class="hidden">
+    <div class="panel">
+      <div class="row"><div><div class="eyebrow">YOUR PRIVATE SPACE</div><h2 id="welcomeTitle" style="margin:8px 0 4px">Tekrar hoş geldin.</h2><p class="muted" style="margin:0">Bu alan yalnızca hesabınla erişilebilir.</p></div><span class="badge">🔒 Özel arşiv</span></div>
+    </div>
+    <section class="panel">
+      <h2>Yeni bir anı ekle</h2>
+      <form id="uploadForm">
+        <label for="memoryTitle">Anının başlığı</label>
+        <input id="memoryTitle" maxlength="100" required placeholder="that summer.">
+        <label for="memoryNote">Küçük bir not (isteğe bağlı)</label>
+        <textarea id="memoryNote" maxlength="1500" placeholder="Bir gün tekrar hatırlamak için..."></textarea>
+        <label for="memoryDate">Tarih</label>
+        <input id="memoryDate" type="date">
+        <label for="memoryFile">Fotoğraf veya video</label>
+        <input id="memoryFile" type="file" accept="image/*,video/mp4,video/webm,video/quicktime" required>
+        <p class="tiny">İlk sürümde tek seferde bir fotoğraf veya video yüklenir. Büyük videolar yükleme kotanı hızla tüketebilir.</p>
+        <button class="btn primary" id="uploadBtn" type="submit">＋ Anıyı arşivle</button>
+        <div id="uploadStatus" class="status" role="status"></div>
+      </form>
+    </section>
+    <div class="section-head"><div><div class="eyebrow">THE ARCHIVE</div><h2>Anıların</h2></div><button id="refreshBtn" class="small-btn" type="button">↻ Yenile</button></div>
+    <div id="gallery" class="gallery"></div>
+    <p id="emptyState" class="muted">Henüz anı yok. İlkini ekleyince burada görünecek. 🖤</p>
+  </section>
+
+  <section id="themesSection" class="panel">
+    <div class="eyebrow">MAKE IT YOURS</div><h2 style="margin-top:8px">Ruh hâlini seç.</h2>
+    <p class="muted">Teman sadece görünüşünü değiştirir; gizlilik ayarlarını değiştirmez.</p>
+    <div id="themeGrid" class="theme-grid"></div>
+    <p class="tiny">Bu sürüm temayı bu cihazın tarayıcısında saklar. Hesaplar arası senkronizasyon için sonraki aşamada kullanıcı profiline bağlanabilir.</p>
+  </section>
+</main>
+<div class="footer">AFTR. · Made for the moments that stay.</div>
+<div id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/*
+  AFTR. starter app.
+  Add your Supabase Project URL and publishable/anon key below.
+  Never place a service_role key in frontend code.
+*/
+const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY_HERE";
+const BUCKET = "aftr-memories";
+
+const themes = {
+  midnight:{name:"Midnight",desc:"Simsiyah, sakin ve premium",vars:["#09090d","#121219","#f5f3fa","#c5a4ff","#f3b5dc"],decor:"✦"},
+  coquette:{name:"Coquette",desc:"Pembe, fiyonklar ve tatlı detaylar",vars:["#fff4fa","#ffe5f1","#432638","#e875b5","#b58be9"],decor:"୨୧"},
+  sakura:{name:"Sakura",desc:"Kiraz çiçekleri ve bahar",vars:["#fff7fa","#ffeaf0","#482d39","#e89ab8","#c6a0e8"],decor:"✿"},
+  lavender:{name:"Lavender Dreams",desc:"Lila gökyüzü ve yıldızlar",vars:["#f7f3ff","#ebe2ff","#302647","#9a78e8","#d3a9f5"],decor:"✧"},
+  romance:{name:"Dark Romance",desc:"Bordo, siyah ve güller",vars:["#10090d","#211018","#f9eaf0","#d76b91","#a78be0"],decor:"❀"},
+  butterfly:{name:"Butterfly",desc:"Pastel gökyüzü ve kelebekler",vars:["#f3f7ff","#e1eaff","#29334d","#8aa9f8","#e8a7d8"],decor:"🦋"},
+  botanical:{name:"Botanical",desc:"Adaçayı yeşili ve yapraklar",vars:["#f3f6f0","#e5ecdf","#26372d","#719d7b","#c2a5d9"],decor:"❧"},
+  cosmic:{name:"Cosmic",desc:"Gece mavisi ve yıldızlar",vars:["#080d1b","#111b32","#eef2ff","#83aaff","#c4a2ff"],decor:"☾"},
+  softcore:{name:"Softcore",desc:"Krem, pudra ve yumuşaklık",vars:["#fff8ef","#f7e9dc","#514236","#d8a2a0","#b4a3d9"],decor:"♡"},
+  vintage:{name:"Vintage Diary",desc:"Eski günlük ve kâğıt dokusu",vars:["#f3eee4","#e8dfd1","#42392f","#aa8067","#a38aab"],decor:"✧"}
+};
+let supabaseClient = null, isSignup = true, currentUser = null, memories = [];
+const $ = id => document.getElementById(id);
+function configured(){return SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("PASTE_") && SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("PASTE_");}
+function toast(msg){const el=$("toast");el.textContent=msg;el.style.display="block";clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display="none",3500);}
+function status(id,msg,type=""){const el=$(id);el.textContent=msg;el.className="status "+type;}
+function setTheme(key,save=true){
+ const t=themes[key]||themes.midnight;const v=t.vars;const root=document.documentElement;
+ root.style.setProperty("--bg",v[0]);root.style.setProperty("--panel",v[1]);root.style.setProperty("--panel2",v[1]);root.style.setProperty("--text",v[2]);root.style.setProperty("--muted",key==="midnight"||key==="romance"||key==="cosmic"?"#aaa5b5":"#766b7a");root.style.setProperty("--accent",v[3]);root.style.setProperty("--accent2",v[4]);root.style.setProperty("--line",key==="midnight"||key==="romance"||key==="cosmic"?"#302a38":"#e5d6e0");root.style.setProperty("--glow",v[3]+"22");root.style.setProperty("--decor",'"'+t.decor+'"');
+ document.querySelectorAll(".theme-card").forEach(b=>b.classList.toggle("active",b.dataset.theme===key));
+ if(save)localStorage.setItem("aftr-theme",key);
+}
+function renderThemes(){const grid=$("themeGrid");grid.innerHTML="";Object.entries(themes).forEach(([key,t])=>{const b=document.createElement("button");b.type="button";b.className="theme-card";b.dataset.theme=key;b.innerHTML=`<strong>${t.decor} ${t.name}</strong><span>${t.desc}</span>`;b.addEventListener("click",()=>{setTheme(key);toast(t.name+" teması seçildi");});grid.appendChild(b);});setTheme(localStorage.getItem("aftr-theme")||"midnight",false);}
+function scrollToEl(id){$(id).scrollIntoView({behavior:"smooth",block:"start"});}
+function setAuthed(user){
+ currentUser=user;$("authSection").classList.toggle("hidden",!!user);$("appSection").classList.toggle("hidden",!user);$("signOutBtn").classList.toggle("hidden",!user);$("userBadge").classList.toggle("hidden",!user);
+ if(user){const name=user.user_metadata?.display_name||user.email?.split("@")[0]||"dostum";$("userBadge").textContent=name;$("welcomeTitle").textContent="Tekrar hoş geldin, "+name+".";loadMemories();}
+}
+function initSupabase(){
+ if(!configured()){$("configNotice").classList.remove("hidden");return;}
+ if(!window.supabase){status("authStatus","Bağlantı kütüphanesi yüklenemedi. İnternet bağlantını kontrol et.","error");return;}
+ supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+ $("configNotice").classList.add("hidden");
+ supabaseClient.auth.getSession().then(({data,error})=>{if(error)status("authStatus",error.message,"error");setAuthed(data.session?.user||null);});
+ supabaseClient.auth.onAuthStateChange((_event,session)=>{setAuthed(session?.user||null);});
+}
+$("authToggle").addEventListener("click",()=>{isSignup=!isSignup;$("authTitle").textContent=isSignup?"Kendi dünyanı oluştur":"Dünyana geri dön";$("authSubtitle").textContent=isSignup?"Anıların sana özel kalsın.":"Arşivin seni bekliyor."; $("authSubmit").textContent=isSignup?"Hesap oluştur":"Giriş yap";$("authToggle").textContent=isSignup?"Giriş yap":"Hesap oluştur";$("signupNameWrap").classList.toggle("hidden",!isSignup);$("password").autocomplete=isSignup?"new-password":"current-password";status("authStatus","");});
+$("authSubmit").addEventListener("click",async()=>{
+ if(!supabaseClient){status("authStatus","Önce README'deki Supabase kurulumunu tamamla.","error");return;}
+ const email=$("email").value.trim(),password=$("password").value,displayName=$("displayName").value.trim();
+ if(!email||password.length<8){status("authStatus","E-posta gir ve en az 8 karakterli parola kullan.","error");return;}
+ $("authSubmit").disabled=true;status("authStatus","İşleniyor…");
+ try{
+  let result;
+  if(isSignup)result=await supabaseClient.auth.signUp({email,password,options:{data:{display_name:displayName}}});
+  else result=await supabaseClient.auth.signInWithPassword({email,password});
+  if(result.error)throw result.error;
+  if(isSignup&&!result.data.session)status("authStatus","Kayıt oluşturuldu. E-postana gelen doğrulama bağlantısına tıkla, sonra giriş yap.","ok");
+  else {status("authStatus","Başarılı!","ok");}
+ }catch(e){status("authStatus",e.message||"Bir hata oluştu.","error");}
+ finally{$("authSubmit").disabled=false;}
+});
+$("signOutBtn").addEventListener("click",async()=>{if(supabaseClient)await supabaseClient.auth.signOut();setAuthed(null);memories=[];$("gallery").innerHTML="";toast("Güvenli çıkış yapıldı.");});
+$("uploadForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!supabaseClient||!currentUser){status("uploadStatus","Önce Supabase'e bağlanıp giriş yapmalısın.","error");return;}
+ const file=$("memoryFile").files[0];if(!file)return;
+ const maxBytes=100*1024*1024;if(file.size>maxBytes){status("uploadStatus","Dosya 100 MB sınırını aşıyor. Daha küçük bir dosya seç.","error");return;}
+ const title=$("memoryTitle").value.trim();if(!title){status("uploadStatus","Anıya bir başlık ver.","error");return;}
+ $("uploadBtn").disabled=true;status("uploadStatus","Dosya yükleniyor…");
+ try{
+  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_").slice(-100);
+  const path=`${currentUser.id}/${crypto.randomUUID()}-${safeName}`;
+  const up=await supabaseClient.storage.from(BUCKET).upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+  if(up.error)throw up.error;
+  const ins=await supabaseClient.from("memories").insert({user_id:currentUser.id,title,note:$("memoryNote").value.trim(),memory_date:$("memoryDate").value||null,storage_path:path,mime_type:file.type,file_name:file.name}).select().single();
+  if(ins.error){await supabaseClient.storage.from(BUCKET).remove([path]);throw ins.error;}
+  $("uploadForm").reset();status("uploadStatus","Anın arşivlendi. 🖤","ok");await loadMemories();toast("Anı güvenle arşivlendi.");
+ }catch(err){status("uploadStatus",err.message||"Yükleme başarısız oldu. SQL ve bucket ayarlarını kontrol et.","error");}
+ finally{$("uploadBtn").disabled=false;}
+});
+async function loadMemories(){
+ if(!supabaseClient||!currentUser)return;
+ $("gallery").innerHTML="";$("emptyState").textContent="Anıların yükleniyor…";
+ const {data,error}=await supabaseClient.from("memories").select("*").order("created_at",{ascending:false});
+ if(error){$("emptyState").textContent="Anılar yüklenemedi: "+error.message;return;}
+ memories=data||[];$("gallery").innerHTML="";
+ for(const m of memories){
+  const {data: signed,error:sErr}=await supabaseClient.storage.from(BUCKET).createSignedUrl(m.storage_path,60*60);
+  const card=document.createElement("article");card.className="memory";
+  let media="";
+  if(!sErr&&signed?.signedUrl){if((m.mime_type||"").startsWith("video/"))media=`<video controls playsinline preload="metadata" src="${signed.signedUrl}"></video>`;else media=`<img loading="lazy" alt="" src="${signed.signedUrl}">`;}
+  card.innerHTML=`${media}<div class="meta"><h3></h3><p></p><p style="margin-top:7px">${escapeHtml(m.memory_date||"")}</p></div><div class="tools"><button class="small-btn share">↗ Paylaş</button><button class="small-btn delete">Sil</button></div>`;
+  card.querySelector("h3").textContent=m.title;card.querySelector(".meta p").textContent=m.note||"";
+  card.querySelector(".share").addEventListener("click",()=>shareMemory(m));
+  card.querySelector(".delete").addEventListener("click",()=>deleteMemory(m));
+  $("gallery").appendChild(card);
+ }
+ $("emptyState").textContent=memories.length?"":"Henüz anı yok. İlkini ekleyince burada görünecek. 🖤";
+}
+function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+async function shareMemory(m){
+ if(!supabaseClient)return;
+ const {data,error}=await supabaseClient.storage.from(BUCKET).createSignedUrl(m.storage_path,60*60);
+ if(error||!data?.signedUrl){toast("Paylaşım bağlantısı oluşturulamadı.");return;}
+ if(navigator.share){try{await navigator.share({title:m.title,text:"AFTR. anısı — bu bağlantı 1 saat geçerlidir.",url:data.signedUrl});}catch(e){}}
+ else {try{await navigator.clipboard.writeText(data.signedUrl);toast("1 saat geçerli özel medya bağlantısı kopyalandı.");}catch(e){prompt("1 saat geçerli bağlantı:",data.signedUrl);}}
+}
+async function deleteMemory(m){
+ if(!confirm("Bu anıyı ve dosyasını kalıcı olarak silmek istiyor musun?"))return;
+ const {error:dbError}=await supabaseClient.from("memories").delete().eq("id",m.id);
+ if(dbError){toast("Silinemedi: "+dbError.message);return;}
+ const {error:storageError}=await supabaseClient.storage.from(BUCKET).remove([m.storage_path]);
+ await loadMemories();toast(storageError?"Anı kaydı silindi; dosya silinememiş olabilir.":"Anı silindi.");
+}
+$("refreshBtn").addEventListener("click",loadMemories);
+$("themeJump").addEventListener("click",()=>scrollToEl("themesSection"));
+$("heroThemes").addEventListener("click",()=>scrollToEl("themesSection"));
+$("heroStart").addEventListener("click",()=>scrollToEl(currentUser?"appSection":"authSection"));
+renderThemes();initSupabase();
+</script>
+</body>
+</html>
